@@ -9,7 +9,8 @@
     <a class="active" href="/">Login</a>
     <a href="/register">Register</a>
 </div>
-<form action="/action_page.php">
+<form action="/login" method="post">
+    @csrf
     <div class="container">
         <h1>Log In</h1>
         <p>Please fill in this form to Log In.</p>
