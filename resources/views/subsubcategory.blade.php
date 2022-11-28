@@ -5,11 +5,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <div class="topnav">
-        <a href="/category">Category</a>
-        <a href="/subcategory">Subcategory</a>
-        <a class="active" href="/subsubcategory">Subsubcategory</a>
-    </div>
+    <x-navbar/>
 
     <form method="post" action="/add/subsubcategory">
         @csrf
@@ -18,7 +14,9 @@
     </form>
     <ul>
     @foreach($categories as $category)
-            <li> <a href="/subcategory/{{$category->name}}">{{$category->name}}</a></li>
+            <li> <a href="/subsubcategory/{{$category->name}}">{{$category->name}}</a></li>
+
+
     @endforeach
     </ul>
     <form action="/logout" method="post">

@@ -5,11 +5,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <div class="topnav">
-        <a href="/category">Category</a>
-        <a class="active" href="/subcategory">Subcategory</a>
-        <a href="/subsubcategory">Subsubcategory</a>
-    </div>
+    <x-navbar/>
 
     <form method="post" action="/add/subcategory">
         @csrf
