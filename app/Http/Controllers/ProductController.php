@@ -25,7 +25,7 @@ class ProductController extends Controller
             ->leftJoin('subcategories','products.subcategory_id','=','subcategories.id')
             ->leftJoin('subsubcategories','products.subsubcategory_id','=','subsubcategories.id')
             ->get();
-        return view('product',[
+        return view('admin.product',[
             'categories'=>Category::all(),
             'subcategories'=>Subcategory::all(),
             'subsubcategories'=>Subsubcategory::all(),
@@ -40,7 +40,7 @@ class ProductController extends Controller
             'category' => 'required',
             'subcategory' => 'required',
             'subsubcategory' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image',
         ]);
 
         $imageName = time().'.'.$request->image->extension();
@@ -83,13 +83,13 @@ class ProductController extends Controller
     {
         $request->validate([
             'id'=>'required|numeric',
-            'image'=>'required'
         ]);
 
 
         Product::find($request->id)->delete();
-        unlink(public_path('/images/'.$request->image));
-
+        if(isset($request->image)) {
+            unlink(public_path('/images/' . $request->image));
+        }
         return to_route('product');
     }
 }

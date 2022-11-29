@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -47,5 +48,11 @@ class PageController extends Controller
             ->get();
 
         return view('public.products',['products'=>$products]);
+    }
+
+    public function gallery($id)
+    {
+        $images = Image::Where('product_id',$id)->get();
+        return view('public.product',['images'=>$images]);
     }
 }

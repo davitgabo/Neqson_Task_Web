@@ -14,11 +14,11 @@ class CategoryController extends Controller
     {
         switch($page) {
             case 'category':
-                return view('category', ['categories' => Category::all(), 'title' => $page]);
+                return view('admin.category', ['categories' => Category::all(), 'title' => $page]);
             case 'subcategory':
-                return view('category', ['categories' => Subcategory::all(), 'title' => $page]);
+                return view('admin.category', ['categories' => Subcategory::all(), 'title' => $page]);
             case 'subsubcategory':
-                return view('category', ['categories' => Subsubcategory::all(), 'title' => $page]);
+                return view('admin.category', ['categories' => Subsubcategory::all(), 'title' => $page]);
             default:
                 return redirect()->back();
         }
