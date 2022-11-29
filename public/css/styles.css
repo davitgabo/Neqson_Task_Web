@@ -15,9 +15,12 @@ body {
 
 .manipulations{
     display: flex;
+    align-content: center;
 }
 
-
+.manipulations form{
+    align-self: center;
+}
 /* Full-width input fields */
 input[type=text], input[type=password] {
     margin: 5px 0 22px 0;
