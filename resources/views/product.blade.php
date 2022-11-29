@@ -7,7 +7,7 @@
 <body>
     <x-navbar/>
 
-    <form method="post" action="/add/product">
+    <form method="post" action="/add/product"  enctype="multipart/form-data">
         @csrf
         <label for="name"> Product Name</label>
         <input type="text" name="name" id="name">
@@ -31,9 +31,11 @@
                 <option value="{{$category->id}}">{{$category->name}}</option>
             @endforeach
         </select>
+        <label for="image"> Upload main image</label>
+        <input type="file" name="image" id="image">
         <button type="submit">add</button>
     </form>
-    <ul>
+
     @foreach($products as $product)
         <div class="manipulations">
             <li> {{$product->name}} : {{$product->description}}</li>
@@ -41,6 +43,11 @@
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" value="{{$product->id}}">
+
+             <img width="100px" src="/images/{{$product->image}}">
+            <h3>{{$product->name}} : {{$product->description}}</h3>
+            <form action="/edit/path" method="post">
+
                 <select name="category" id="category">
                     @foreach($categories as $category)
                         <option value="{{$category->id}}" @if($category->name == $product->category) selected @endif>
@@ -64,9 +71,17 @@
                 </select>
                 <button type="submit">change</button>
             </form>
+
+            <form action="/delete/product" method="post">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" value="{{$product->id}}" name="id">
+                <input type="hidden" value="{{$product->image}}" name="image">
+                <button type="submit" style="background-color: red"> DELETE</button>
+            </form>
         </div>
     @endforeach
-    </ul>
+
     <form action="/logout" method="post">
         @csrf
         <button type="submit"> log out</button>

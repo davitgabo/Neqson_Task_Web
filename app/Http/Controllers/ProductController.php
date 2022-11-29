@@ -14,9 +14,10 @@ class ProductController extends Controller
     public function index()
     {
         $products = DB::table('products')
-            ->select('products.id',
+            ->select('products.image as image',
                 'products.name as name',
                 'products.description as description',
+                'products.id as id',
                 'categories.name as category',
                 'subcategories.name as subcategory',
                 'subsubcategories.name as subsubcategory')
@@ -39,7 +40,12 @@ class ProductController extends Controller
             'category' => 'required',
             'subcategory' => 'required',
             'subsubcategory' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        $imageName = time().'.'.$request->image->extension();
+
+        $request->image->move(public_path('images'), $imageName);
 
         Product::create([
             'name' => $request->name,
@@ -47,10 +53,12 @@ class ProductController extends Controller
             'category_id' => $request->category,
             'subcategory_id' => $request->subcategory,
             'subsubcategory_id' => $request->subsubcategory,
+            'image' => $imageName
         ]);
 
         return to_route('product');
     }
+
 
     public function editPath(Request $request)
     {
@@ -68,6 +76,19 @@ class ProductController extends Controller
         $product->subsubcategory_id = $request->subsubcategory;
 
         $product->save();
+
+        return to_route('product');
+    }
+    public function delete(Request $request)
+    {
+        $request->validate([
+            'id'=>'required|numeric',
+            'image'=>'required'
+        ]);
+
+
+        Product::find($request->id)->delete();
+        unlink(public_path('/images/'.$request->image));
 
         return to_route('product');
     }
