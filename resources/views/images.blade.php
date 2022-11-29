@@ -6,15 +6,16 @@
 </head>
 <body>
     <x-navbar/>
-
-    <form method="post" action="/add/subcategory">
+    <h1>{{$title}}</h1>
+    <form action="/add/image" method="post">
         @csrf
-        <input type="text" name="name">
-        <button type="submit">add</button>
+        <input type="hidden" name="id" value="{{$id}}">
+        <input type="file" name="image">
+        <button type="submit"> Add </button>
     </form>
     <ul>
-    @foreach($categories as $category)
-            <li> <a href="/subcategory/{{$category->name}}">{{$category->name}}</a></li>
+    @foreach($images as $image)
+           <img src="{{$image->source}}" alt="{{$title}}">
     @endforeach
     </ul>
     <form action="/logout" method="post">

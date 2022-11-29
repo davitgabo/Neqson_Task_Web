@@ -37,7 +37,10 @@
     @foreach($products as $product)
         <div class="manipulations">
             <li> {{$product->name}} : {{$product->description}}</li>
-            <form action="/edit/path" method="post">
+            <form action="/edit/product/path" method="post">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="id" value="{{$product->id}}">
                 <select name="category" id="category">
                     @foreach($categories as $category)
                         <option value="{{$category->id}}" @if($category->name == $product->category) selected @endif>

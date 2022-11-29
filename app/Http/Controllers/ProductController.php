@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = DB::table('products')
-            ->select(
+            ->select('products.id',
                 'products.name as name',
                 'products.description as description',
                 'categories.name as category',
@@ -48,6 +48,26 @@ class ProductController extends Controller
             'subcategory_id' => $request->subcategory,
             'subsubcategory_id' => $request->subsubcategory,
         ]);
+
+        return to_route('product');
+    }
+
+    public function editPath(Request $request)
+    {
+        $request->validate([
+            'id' =>'required|numeric',
+            'category' => 'required',
+            'subcategory' => 'required',
+            'subsubcategory' => 'required',
+        ]);
+
+        $product = Product::find($request->id);
+
+        $product->category_id = $request->category;
+        $product->subcategory_id = $request->subcategory;
+        $product->subsubcategory_id = $request->subsubcategory;
+
+        $product->save();
 
         return to_route('product');
     }

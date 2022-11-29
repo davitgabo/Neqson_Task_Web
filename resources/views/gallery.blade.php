@@ -6,17 +6,9 @@
 </head>
 <body>
     <x-navbar/>
-
-    <form method="post" action="/add/subsubcategory">
-        @csrf
-        <input type="text" name="name">
-        <button type="submit">add</button>
-    </form>
     <ul>
-    @foreach($categories as $category)
-            <li> <a href="/subsubcategory/{{$category->name}}">{{$category->name}}</a></li>
-
-
+    @foreach($products as $product)
+            <li> <a href="/admin/gallery/{{$product->id}}"> {{$product->name}} </a></li>
     @endforeach
     </ul>
     <form action="/logout" method="post">
