@@ -20,35 +20,42 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/admin', [AuthController::class, 'index'])->middleware('guest')->name('login');
-Route::get('/register', [AuthController::class, 'create'])->middleware('guest');
-Route::post('/store', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
 
+Route::controller(AuthController::class)->group(function(){
+    Route::get('/admin','index')->middleware('guest')->name('login');
+    Route::get('/register','create')->middleware('guest');
+    Route::post('/store','register');
+    Route::post('/login','login');
+    Route::post('/logout','logout');
+});
 
+Route::controller(PageController::class)->group(function(){
+    Route::get('/','index');
+    Route::get('/category/{id1}/{id2}/{id3}','products');
+    Route::get('/category/{id1}/{id2}','lastLayer');
+    Route::get('/category/{id}','show');
+    Route::get('/product/{id}','gallery');
+});
 
-Route::get('/', [PageController::class, 'index']);
-Route::get('/category/{id1}/{id2}/{id3}', [PageController::class, 'products']);
-Route::get('/category/{id1}/{id2}', [PageController::class, 'lastLayer']);
-Route::get('/category/{id}', [PageController::class, 'show']);
-Route::get('/product/{id}',[PageController::class,'gallery']);
+Route::middleware('auth')->group(function(){
+    Route::controller(ProductController::class)->group(function() {
+        Route::get('/admin/product','index')->name('product');
+        Route::put('/edit/product/path','editPath');
+        Route::post('/add/product','store');
+        Route::delete('/delete/product','delete');
+    });
 
-Route::get('/admin/product', [ProductController::class, 'index'])->middleware('auth')->name('product');
-Route::put('/edit/product/path', [ProductController::class, 'editPath'])->middleware('auth');
-Route::post('/add/product', [ProductController::class, 'store'])->middleware('auth');
-Route::delete('/delete/product', [ProductController::class, 'delete'])->middleware('auth');
+    Route::controller(ImageController::class)->group(function() {
+        Route::get('/admin/gallery/{id}','show')->name('images');
+        Route::post('/add/image','store');
+        Route::delete('/delete/image','delete');
+        Route::put('/change/image','change');
+    });
 
-
-Route::get('/admin/gallery', [ImageController::class, 'index'])->middleware('auth');
-Route::get('/admin/gallery/{id}', [ImageController::class, 'show'])->middleware('auth')->name('images');
-Route::post('/add/image', [ImageController::class, 'store'])->middleware('auth');
-Route::delete('/delete/image', [ImageController::class, 'delete'])->middleware('auth');
-Route::put('/change/image', [ImageController::class, 'change'])->middleware('auth');
-
-
-
-Route::get('/admin/{category}', [CategoryController::class, 'index'])->middleware('auth')->name('category');
-Route::post('/add/{category}', [CategoryController::class, 'store'])->middleware('auth');
-Route::put('/edit/{category}', [CategoryController::class, 'edit'])->middleware('auth');
-Route::delete('/delete/{category}', [CategoryController::class, 'delete'])->middleware('auth');
+    Route::controller(CategoryController::class)->group(function() {
+        Route::get('/admin/{category}','index')->name('category');
+        Route::post('/add/{category}','store');
+        Route::put('/edit/{category}','edit');
+        Route::delete('/delete/{category}','delete');
+    });
+});

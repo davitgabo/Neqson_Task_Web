@@ -10,26 +10,44 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
+    /**
+     * @param $page
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function index($page)
     {
+        // check which category layer is being requested
         switch($page) {
             case 'category':
-                return view('admin.category', ['categories' => Category::all(), 'title' => $page]);
+                $categories = Category::all();
+                break;
             case 'subcategory':
-                return view('admin.category', ['categories' => Subcategory::all(), 'title' => $page]);
+                $categories = Subcategory::all();
+                break;
             case 'subsubcategory':
-                return view('admin.category', ['categories' => Subsubcategory::all(), 'title' => $page]);
+                $categories = Subsubcategory::all();
+                break;
             default:
                 return redirect()->back();
         }
+
+        return view('admin.category', ['categories' => $categories, 'title' => $page]);
+
     }
 
+    /**
+     * @param Request $request
+     * @param $page
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request, $page)
     {
+        // validate the request
         $request->validate([
             'name'=> 'required|unique:categories',
         ]);
 
+        // check which category layer is stored and create a record in the relevant table.
         switch($page) {
             case 'category':
                 Category::create([
@@ -53,23 +71,44 @@ class CategoryController extends Controller
         return to_route('category',['category'=>$page]);
     }
 
+    /**
+     * @param Request $request
+     * @param $page
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function edit(Request $request, $page)
     {
+        // get the table name from the requested page
         $db = substr($page,0,-1).'ies';
 
+        // validate request
         $request->validate([
             "id" => "required|numeric",
             "name" => "required|unique:$db"
         ]);
 
+        // update the table record
         DB::table($db)->where('id', $request->id)->update(['name'=>$request->name]);
 
         return to_route('category',['category'=>$page]);
     }
 
+    /**
+     * @param Request $request
+     * @param $page
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete(Request $request, $page)
     {
+        // get the table name from the requested page
         $db = substr($page,0,-1).'ies';
+
+        // validate request
+        $request->validate([
+            "id" => "required|numeric",
+            ]);
+
+        // delete the table record
         DB::table($db)->where('id', $request->id)->delete();
 
         return to_route('category',['category'=>$page]);

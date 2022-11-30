@@ -9,5 +9,8 @@ class Product extends Model
 {
     use HasFactory;
 
+    /**
+     * @var array
+     */
     protected $guarded = [];
 }

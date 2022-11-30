@@ -11,8 +11,12 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function index()
     {
+        // get products and product related categories
         $products = DB::table('products')
             ->select('products.image as image',
                 'products.name as name',
@@ -25,15 +29,20 @@ class ProductController extends Controller
             ->leftJoin('subcategories','products.subcategory_id','=','subcategories.id')
             ->leftJoin('subsubcategories','products.subsubcategory_id','=','subsubcategories.id')
             ->get();
-        return view('admin.product',[
-            'categories'=>Category::all(),
-            'subcategories'=>Subcategory::all(),
-            'subsubcategories'=>Subsubcategory::all(),
-            'products'=>$products]);
+
+        return view('admin.product',['categories'=>Category::all(),
+                                          'subcategories'=>Subcategory::all(),
+                                          'subsubcategories'=>Subsubcategory::all(),
+                                          'products'=>$products]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
+        // validate request
         $request->validate([
             'name'=> 'required',
             'description' => 'required',
@@ -43,25 +52,31 @@ class ProductController extends Controller
             'image' => 'required|image',
         ]);
 
+        // create unique image name
         $imageName = time().'.'.$request->image->extension();
 
+        // save uploaded image to public folder
         $request->image->move(public_path('images'), $imageName);
 
-        Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'category_id' => $request->category,
-            'subcategory_id' => $request->subcategory,
-            'subsubcategory_id' => $request->subsubcategory,
-            'image' => $imageName
-        ]);
+        // save uploaded product to the products table
+        Product::create(['name' => $request->name,
+                         'description' => $request->description,
+                         'category_id' => $request->category,
+                         'subcategory_id' => $request->subcategory,
+                         'subsubcategory_id' => $request->subsubcategory,
+                         'image' => $imageName]
+        );
 
         return to_route('product');
     }
 
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function editPath(Request $request)
     {
+        // validate request
         $request->validate([
             'id' =>'required|numeric',
             'category' => 'required',
@@ -69,27 +84,45 @@ class ProductController extends Controller
             'subsubcategory' => 'required',
         ]);
 
+
+        // get the product
         $product = Product::find($request->id);
 
+        // edit product path
         $product->category_id = $request->category;
         $product->subcategory_id = $request->subcategory;
         $product->subsubcategory_id = $request->subsubcategory;
 
+        // save the record
         $product->save();
 
         return to_route('product');
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete(Request $request)
     {
+        //validate request
         $request->validate([
             'id'=>'required|numeric',
         ]);
 
+        //get the product by id
+        $product = Product::find($request->id);
 
-        Product::find($request->id)->delete();
-        if(isset($request->image)) {
+        //delete product
+        if ($product) {
+            $product->delete();
+        }
+
+        // delete image from public folder
+        if (file_exists(public_path('/images/' . $request->image))) {
             unlink(public_path('/images/' . $request->image));
         }
+
         return to_route('product');
     }
 }

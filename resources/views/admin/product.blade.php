@@ -15,9 +15,9 @@
         <input type="text" name="description" id="description">
         <label for="category"> choose category</label>
         <select name="category" id="category">
-        @foreach($categories as $category)
-            <option value="{{$category->id}}">{{$category->name}}</option>
-        @endforeach
+            @foreach($categories as $category)
+                <option value="{{$category->id}}">{{$category->name}}</option>
+            @endforeach
         </select>
         <label for="category"> choose subcategory</label>
         <select name="subcategory" id="subcategory">
@@ -38,9 +38,11 @@
 
     @foreach($products as $product)
         <div class="manipulations">
-             <img width="100px" src="/images/{{$product->image}}">
-            <h3>{{$product->name}} : {{$product->description}}</h3>
-            <form action="/edit/path" method="post">
+            <a href="/admin/gallery/{{$product->id}}">
+                <img width="100px" src="/images/{{$product->image}}">
+                <h3>{{$product->name}} : {{$product->description}}</h3>
+            </a>
+            <form action="/edit/product/path" method="post">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" value="{{$product->id}}">
@@ -78,9 +80,5 @@
         </div>
     @endforeach
 
-    <form action="/logout" method="post">
-        @csrf
-        <button type="submit"> log out</button>
-    </form>
 </body>
 </html>

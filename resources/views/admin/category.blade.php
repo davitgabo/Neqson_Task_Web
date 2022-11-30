@@ -11,7 +11,5 @@
     <x-add_form>{{$title}}</x-add_form>
 
     <x-category_list :categories="$categories" :title="$title"/>
-
-    <x-logout_form/>
 </body>
 </html>

@@ -9,5 +9,8 @@ class Subcategory extends Model
 {
     use HasFactory;
 
+    /**
+     * @var array
+     */
     protected $guarded = [];
 }
