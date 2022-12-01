@@ -46,9 +46,9 @@ class ProductController extends Controller
         $request->validate([
             'name'=> 'required',
             'description' => 'required',
-            'category' => 'required',
-            'subcategory' => 'required',
-            'subsubcategory' => 'required',
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'required|exists:subcategories,id',
+            'subsubcategory' => 'required|exists:subsubcategories,id',
             'image' => 'required|image',
         ]);
 
