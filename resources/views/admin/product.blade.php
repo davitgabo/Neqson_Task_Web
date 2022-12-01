@@ -6,7 +6,6 @@
 </head>
 <body>
     <x-navbar/>
-
     <form method="post" action="/add/product"  enctype="multipart/form-data">
         @csrf
         <label for="name"> Product Name</label>
@@ -40,7 +39,7 @@
         <div class="manipulations">
             <a href="/admin/gallery/{{$product->id}}">
                 <img width="100px" src="/images/{{$product->image}}">
-                <h3>{{$product->name}} : {{$product->description}}</h3>
+                <h3>{{$product->name}} : <br/> {{$product->description}}</h3>
             </a>
             <form action="/edit/product/path" method="post">
                 @csrf
@@ -69,16 +68,12 @@
                 </select>
                 <button type="submit">change</button>
             </form>
-
-            <form action="/delete/product" method="post">
+            <form action="/delete/product/{{$product->id}}" method="post">
                 @csrf
                 @method('DELETE')
-                <input type="hidden" value="{{$product->id}}" name="id">
-                <input type="hidden" value="{{$product->image}}" name="image">
                 <button type="submit" style="background-color: red"> DELETE</button>
             </form>
         </div>
     @endforeach
-
 </body>
 </html>

@@ -46,9 +46,9 @@ class ProductController extends Controller
         $request->validate([
             'name'=> 'required',
             'description' => 'required',
-            'category' => 'required',
-            'subcategory' => 'required',
-            'subsubcategory' => 'required',
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'required|exists:subcategories,id',
+            'subsubcategory' => 'required|exists:subsubcategories,id',
             'image' => 'required|image',
         ]);
 
@@ -100,29 +100,24 @@ class ProductController extends Controller
     }
 
     /**
+     * delete product with images
+     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
-        //validate request
-        $request->validate([
-            'id'=>'required|numeric',
-        ]);
-
         //get the product by id
-        $product = Product::find($request->id);
+        $product = Product::find($id);
 
         //delete product
         if ($product) {
+            // delete image from public folder
+            if (file_exists(public_path('/images/' . $product->image))) {
+                unlink(public_path('/images/' . $product->image));
+            }
             $product->delete();
         }
-
-        // delete image from public folder
-        if (file_exists(public_path('/images/' . $request->image))) {
-            unlink(public_path('/images/' . $request->image));
-        }
-
         return to_route('product');
     }
 }

@@ -10,10 +10,9 @@
                 <input type="text" name="name">
                 <button type="submit">edit</button>
             </form>
-            <form action="/delete/{{$title}}" method="post">
+            <form action="/delete/{{$title}}/{{$category->id}}" method="post">
                 @csrf
                 @method('DELETE')
-                <input type="hidden" name="id" value="{{$category->id}}">
                 <button type="submit">delete</button>
             </form>
         </div>

@@ -36,6 +36,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * add a new category
+     *
      * @param Request $request
      * @param $page
      * @return \Illuminate\Http\RedirectResponse
@@ -44,7 +46,7 @@ class CategoryController extends Controller
     {
         // validate the request
         $request->validate([
-            'name'=> 'required|unique:categories',
+            'name'=> 'required|unique:categories|unique:subcategories|unique:subsubcategories',
         ]);
 
         // check which category layer is stored and create a record in the relevant table.
@@ -72,6 +74,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * edit the category record
+     *
      * @param Request $request
      * @param $page
      * @return \Illuminate\Http\RedirectResponse
@@ -83,8 +87,8 @@ class CategoryController extends Controller
 
         // validate request
         $request->validate([
-            "id" => "required|numeric",
-            "name" => "required|unique:$db"
+            'id' => 'required|numeric',
+            'name' => 'required|unique:categories|unique:subcategories|unique:subsubcategories'
         ]);
 
         // update the table record
@@ -94,22 +98,19 @@ class CategoryController extends Controller
     }
 
     /**
+     * delete the category record
+     *
      * @param Request $request
      * @param $page
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete(Request $request, $page)
+    public function delete($page, $id)
     {
         // get the table name from the requested page
         $db = substr($page,0,-1).'ies';
 
-        // validate request
-        $request->validate([
-            "id" => "required|numeric",
-            ]);
-
         // delete the table record
-        DB::table($db)->where('id', $request->id)->delete();
+        DB::table($db)->where('id', $id)->delete();
 
         return to_route('category',['category'=>$page]);
     }
