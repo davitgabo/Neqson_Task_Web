@@ -16,11 +16,9 @@
 
     @foreach($images as $image)
             <img height="100px" width="100px" src="/images/{{$image->source}}" alt="{{$title}}">
-            <form action="/delete/image" method="post">
+            <form action="/delete/image/{{$image->id}}" method="post">
                 @csrf
                 @method('DELETE')
-                <input type="hidden" name="id" value="{{$image->id}}">
-                <input type="hidden" name="image" value="{{$image->source}}">
                 <button type="submit" > delete </button>
             </form>
 

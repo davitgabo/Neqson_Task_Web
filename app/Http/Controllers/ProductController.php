@@ -101,7 +101,7 @@ class ProductController extends Controller
     }
 
     /**
-     * delete product
+     * delete product with images
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -112,6 +112,7 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if ($product) {
+
             // delete main image
             if (file_exists(public_path('/images/' . $product->image))) {
                 unlink(public_path('/images/' . $product->image));
@@ -122,6 +123,7 @@ class ProductController extends Controller
             foreach ($images as $image){
                 unlink(public_path('/images/' . $image->source));
             }
+
 
             // delete related images from database
             Image::where('product_id',$id)->delete();

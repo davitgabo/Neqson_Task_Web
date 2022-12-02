@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 class ImageController extends Controller
 {
     /**
+     * render product gallery
+     *
      * @param $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
@@ -22,6 +24,8 @@ class ImageController extends Controller
     }
 
     /**
+     * save image to gallery
+     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -49,34 +53,30 @@ class ImageController extends Controller
     }
 
     /**
+     * delete image from gallery
+     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
-        // validate request
-        $request->validate([
-            'id' => 'required|numeric',
-            'image' => 'required'
-        ]);
-
         //get the image by id
-        $image = Image::find($request->id);
+        $image = Image::find($id);
 
-        // delete the image from table
         if ($image) {
+            // delete the image from public folder
+            if (file_exists(public_path('/images/' . $image->source))) {
+                unlink(public_path('/images/' . $image->source));
+            }
             $image->delete();
-        }
-
-        // delete the image from public folder
-        if (file_exists(public_path('/images/' . $request->image))) {
-            unlink(public_path('/images/' . $request->image));
         }
 
         return redirect()->back();
     }
 
     /**
+     * change main product image
+     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
