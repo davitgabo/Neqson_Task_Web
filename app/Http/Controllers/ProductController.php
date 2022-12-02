@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Subsubcategory;
@@ -116,6 +117,9 @@ class ProductController extends Controller
             if (file_exists(public_path('/images/' . $product->image))) {
                 unlink(public_path('/images/' . $product->image));
             }
+            // delete related images from database
+            Image::where('product_id',$id)->delete();
+
             $product->delete();
         }
         return to_route('product');
