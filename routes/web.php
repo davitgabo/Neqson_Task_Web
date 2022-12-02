@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function(){
         Route::get('/admin/product','index')->name('product');
         Route::put('/edit/product/path','editPath');
         Route::post('/add/product','store');
-        Route::delete('/delete/product','delete');
+        Route::delete('/delete/product/{id}','delete');
     });
 
     Route::controller(ImageController::class)->group(function() {

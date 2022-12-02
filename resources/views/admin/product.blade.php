@@ -70,11 +70,9 @@
                 <button type="submit">change</button>
             </form>
 
-            <form action="/delete/product" method="post">
+            <form action="/delete/product/{{$product->id}}" method="post">
                 @csrf
                 @method('DELETE')
-                <input type="hidden" value="{{$product->id}}" name="id">
-                <input type="hidden" value="{{$product->image}}" name="image">
                 <button type="submit" style="background-color: red"> DELETE</button>
             </form>
         </div>

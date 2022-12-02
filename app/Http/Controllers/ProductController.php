@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Subsubcategory;
@@ -100,27 +101,32 @@ class ProductController extends Controller
     }
 
     /**
+     * delete product
+     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
-        //validate request
-        $request->validate([
-            'id'=>'required|numeric',
-        ]);
-
         //get the product by id
-        $product = Product::find($request->id);
+        $product = Product::find($id);
 
-        //delete product
         if ($product) {
-            $product->delete();
-        }
+            // delete main image
+            if (file_exists(public_path('/images/' . $product->image))) {
+                unlink(public_path('/images/' . $product->image));
+            }
 
-        // delete image from public folder
-        if (file_exists(public_path('/images/' . $request->image))) {
-            unlink(public_path('/images/' . $request->image));
+            // delete related images from gallery
+            $images = Image::where('product_id',$id)->get();
+            foreach ($images as $image){
+                unlink(public_path('/images/' . $image->source));
+            }
+
+            // delete related images from database
+            Image::where('product_id',$id)->delete();
+
+            $product->delete();
         }
 
         return to_route('product');

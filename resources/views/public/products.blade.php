@@ -3,14 +3,7 @@
    <head>
       <title>Neqson</title>
    </head>
-   <!-- body -->
    <body class="main-layout footer_to90 project_page">
-      <!-- loader  -->
-      <!-- end loader -->
-      <!-- header -->
-
-      <!-- end header inner -->
-      <!-- end header -->
       <div class="blue_bg">
          <div class="container">
             <div class="row">
@@ -22,7 +15,6 @@
             </div>
          </div>
       </div>
-      <!-- project section -->
       <div id="project" class="project">
          <div class="container">
 
@@ -41,16 +33,7 @@
             </div>
          </div>
       </div>
-      <!-- end project section -->
 
-      <!-- Javascript files-->
-      <script src="js/jquery.min.js"></script>
-      <script src="js/popper.min.js"></script>
-      <script src="js/bootstrap.bundle.min.js"></script>
-      <script src="js/jquery-3.0.0.min.js"></script>
-      <!-- sidebar -->
-      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
-      <script src="js/custom.js"></script>
    </body>
 </html>
 
